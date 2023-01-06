@@ -1,7 +1,7 @@
 import { ScrollView } from "react-native-gesture-handler"
 import { Text, View, StyleSheet, Image, TextInput } from "react-native"
 
-const ListToDo = () => {
+const ListToDo = ({navigation}) => {
   return (
     <ScrollView style={{backgroundColor: 'white'}}>
       
@@ -64,7 +64,7 @@ const ListToDo = () => {
 
           <View style={BoxList.box}>
             <View>
-              <Text style={{fontWeight: '800', fontSize: 12}}>
+              <Text style={{fontWeight: '800', fontSize: 12}} onPress={() => navigation.navigate("DetailList")}>
                 Study - Golang
               </Text>
               <Text style={{
@@ -78,7 +78,7 @@ const ListToDo = () => {
                 Learn Golang to improve fundamentals and familiarize with coding.
               </Text>
               <Text style={{fontWeight: '400', fontSize: 8, color: '#9B9B9B'}}>
-                <Image source={require('../images/Calendar.png')} />
+                <Image style={{marginRight: 3}} source={require('../images/Calendar.png')} />
                 19 July 2022
                 </Text>
             </View>
@@ -110,8 +110,8 @@ const ListToDo = () => {
 
           <View style={BoxList.box2}>
             <View>
-              <Text style={{fontWeight: '800', fontSize: 12}}>
-                Study - Golang
+              <Text style={{fontWeight: '800', fontSize: 12, textDecorationLine: 'line-through'}}>
+                Home Work - Mathematics
               </Text>
               <Text style={{
                 fontWeight: '400', 
@@ -119,9 +119,10 @@ const ListToDo = () => {
                 color: '#9B9B9B',
                 marginTop: 3,
                 marginBottom: 10,
-                width: 210
+                width: 210,
+                textDecorationLine: 'line-through'
                 }}>
-                Learn Golang to improve fundamentals and familiarize with coding.
+                Do homework math probability
               </Text>
               <Text style={{fontWeight: '400', fontSize: 8, color: '#9B9B9B'}}>
                 <Image source={require('../images/Calendar.png')} />
@@ -154,6 +155,7 @@ const ListToDo = () => {
             </View>
           </View>
 
+            <Text onPress={() => navigation.navigate("AddCategory")}>Next</Text>
         </View>
 
       </View>

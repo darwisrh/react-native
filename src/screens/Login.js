@@ -25,7 +25,7 @@ const Login = (props) => {
           <Pressable style={styling.login}>
             <Text 
             style={{fontWeight: '800', color: 'white'}}
-            onPress={() => props.navigation.navigate("ListToDo")}
+            onPress={() => props.navigation.navigate("Welcome")}
             >
               Login
             </Text>
@@ -68,7 +68,6 @@ const styling = StyleSheet.create({
 
   login: {
     backgroundColor: '#FF5555',
-    backgroundColor: "#FF5555",
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
