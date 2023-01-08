@@ -1,8 +1,10 @@
 import { View, Text, StyleSheet, Image } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
+import { Route, navigation } from "@react-navigation/native";
 
 
-const DetailList = () => {
+const DetailList = ({route, navigation}) => {
+  const { item } = route.params
   return (
     <ScrollView>
 
@@ -15,7 +17,7 @@ const DetailList = () => {
                 fontSize: 22, 
                 fontWeight: '800'
                 }}>
-                  Study - Golang
+                  {item.name}
               </Text>
             </View>
 
@@ -27,29 +29,14 @@ const DetailList = () => {
 
           <View style={{marginTop: 20}}>
             <Text style={style.textDec}>
-              Learn Golang to improve fundamentals and familiarize with coding.
-            </Text>
-
-            <Text style={style.textDec}>
-              Advantages of Go, it's a good language to make backend, and you will try it now, hehe.
-            </Text>
-
-            <Text style={style.textDec}>
-              Supports concurrency at the language level with fairly easy application
-              Supports data processing with multiple processors at the same time (parallel processing).  
-            </Text>
-
-            <Text style={style.textDec}>
-              Have a garbage collector
-              The compilation process is very fast
-              It's not a hierarchical programming language and it's not strict OOP, giving developers the freedom to how to write code.
+              {item.description}
             </Text>
           </View>
 
           <View style={{flexDirection: 'row'}}>
             <Image source={require('../images/Calendar.png')} />
             <Text style={{fontSize: 10, color: '#9B9B9B', marginLeft: 5, position: 'relative', bottom: 3}}>
-              19 July 2022
+              {item.choose}
             </Text>
           </View>
 

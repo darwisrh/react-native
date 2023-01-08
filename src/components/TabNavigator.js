@@ -1,14 +1,11 @@
 import * as React from 'react'
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-// import { Ionicons } from "@expo/vector-icons";
 
 // Icons
 import { Ionicons } from '@expo/vector-icons';
-// import Clipboard from '../images/TabIeIcons/Clipboard.png'
-// import ClipboardNoCol from '../images/TabIeIcons/ClipboardNoCol.png'
 
 // Screens
-import ListToDo from "../screens/LoginListTodo";
+import ListToDo from "../screens/ListTodo";
 import AddCategory from '../screens/AddCategory';
 import AddList from '../screens/AddList';
 

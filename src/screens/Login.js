@@ -1,8 +1,52 @@
-import { View, Image, StyleSheet, Text, TextInput, Pressable } from "react-native"
+import { 
+  View, 
+  Image, 
+  StyleSheet,
+  Text, 
+  TextInput, 
+  Pressable,
+  ScrollView
+} from "react-native"
+import { useState } from 'react'
+import { API } from "../config/api"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 const Login = (props) => {
+
+  const [form, setForm] = useState("")
+
+  const handleChange = (name, value) => {
+    setForm({
+      ...form,
+      [name]: value
+    })
+  }
+  
+  const handleSubmit = async () => {
+    try {
+      const response = await API.post('/auth/login', form)
+      
+      if (response) {
+        await AsyncStorage.setItem("token", response.data.token)
+        await AsyncStorage.setItem("name", response.data.user.firstName)
+        await AsyncStorage.setItem("id", response.data.user._id)
+        await AsyncStorage.setItem("email", response.data.user.email)
+      }
+      const token = await AsyncStorage.getItem("token")
+      if(token !== null) {
+        props.navigation.navigate("Welcome")
+      }
+    } catch (err) {
+      console.log(err);
+      if (err) {
+        alert("Login Failed")
+      }
+      
+    }
+  }
+
   return (
-    <View>
+    <ScrollView>
 
       <View style={styling.image}>
         <Image source={require('../images/Login.png')} />
@@ -17,15 +61,25 @@ const Login = (props) => {
         </View>
 
         <View style={{marginTop: 20}}>
-          <TextInput style={styling.input} placeholder="Email"/>
-          <TextInput style={styling.input} placeholder="Password"/>
+          <TextInput 
+          style={styling.input} 
+          placeholder="Email"
+          onChangeText={(value => handleChange("email", value))}
+          value={form.email}
+          />
+          <TextInput 
+          style={styling.input} 
+          placeholder="Password"
+          onChangeText={(value => handleChange("password", value))}
+          value={form.password}
+          />
         </View>
 
         <View style={{marginTop: 30}}>
           <Pressable style={styling.login}>
             <Text 
             style={{fontWeight: '800', color: 'white'}}
-            onPress={() => props.navigation.navigate("Welcome")}
+            onPress={handleSubmit}
             >
               Login
             </Text>
@@ -39,7 +93,7 @@ const Login = (props) => {
 
       </View>
 
-    </View>
+    </ScrollView>
   )
 }
 

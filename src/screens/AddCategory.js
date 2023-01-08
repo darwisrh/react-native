@@ -1,9 +1,55 @@
-import { View, StyleSheet, Text, TextInput, TouchableHighlight } from "react-native"
+import { View, StyleSheet, Text, TextInput, TouchableHighlight, ScrollView } from "react-native"
+import { API } from "../config/api"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useEffect, useState } from 'react'
+
+const AddCategory = () => {
+
+  // Get User 
+
+  // Config
+  const [form, setForm] = useState({
+    name: ''
+  })
+
+  const handleChange = (name, value) => {
+    setForm({
+      ...form,
+      [name]: value
+    })
+  }
+
+  const handleSubmit = async () => {
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${await AsyncStorage.getItem("token")}`
+        }
+      }
+      const response = await API.post('/addCategory', form, config)
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const [categories, setCategories] = useState([])
+
+  const getCategory = async () => {
+    try {
+      const response = await API.get('/addCategory')
+      setCategories(response.data)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    getCategory()
+  }, [categories])
 
 
-const AddCategory = ({ navigation }) => {
   return (
-    <View>
+    <ScrollView>
 
       <View style={style.container}>
         
@@ -22,9 +68,11 @@ const AddCategory = ({ navigation }) => {
           }}
           name="AddCategory"
           placeholder="Name"
+          onChangeText={value => handleChange("name", value)}
+          value={form.name}
           />
           <TouchableHighlight style={style.button}>
-            <Text style={{fontSize: 16, fontWeight: '800', color: 'white'}}>
+            <Text style={{fontSize: 16, fontWeight: '800', color: 'white'}} onPress={handleSubmit}>
               Add Category
             </Text>
           </TouchableHighlight>
@@ -45,44 +93,29 @@ const AddCategory = ({ navigation }) => {
             flexDirection: 'row',
             flexWrap: 'wrap'
           }}>
-            <Text style={{
-            backgroundColor: '#81C8FF',
-              color: 'white',
-              paddingHorizontal: 15,
-              paddingVertical: 2,
-              borderRadius: 7,
-              marginEnd: 5
-            }}>
-              Study
-            </Text>
 
-            <Text style={{
-              backgroundColor: '#FF8181',
-              color: 'white',
-              paddingHorizontal: 15,
-              paddingVertical: 2,
-              borderRadius: 7,
-              marginEnd: 5
-            }}>
-              Home Work
-            </Text>
+          {
+            categories.map(u => (
+              <Text style={{
+                backgroundColor: '#81C8FF',
+                  color: 'white',
+                  paddingHorizontal: 18,
+                  paddingVertical: 5,
+                  borderRadius: 10,
+                  margin: 5
+                }}
+                key={u._id}
+                >
+                  {u.name}
+              </Text>
+            ))
+          }
 
-            <Text style={{
-              backgroundColor: '#FFB681',
-              color: 'white',
-              paddingHorizontal: 15,
-              paddingVertical: 2,
-              borderRadius: 7
-            }}>
-              Workout
-            </Text>
           </View>
         </View>
-
-          <Text onPress={() => navigation.navigate("AddList")}>Next</Text>
       </View>
 
-    </View>
+    </ScrollView>
   )
 }
 

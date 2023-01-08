@@ -1,9 +1,30 @@
 import { ScrollView } from "react-native-gesture-handler"
 import { Text, View, StyleSheet, Image, TextInput } from "react-native"
+import { useState, useEffect } from 'react'
+import { API } from "../config/api"
 
 const ListToDo = ({navigation}) => {
+
+  const [seacrhTerm, setSearchTerm] = useState('')
+
+  // Get All List
+  const [lists, setLists] = useState([])
+  const getList = async () => {
+    try {
+      const response = await API.get('/addList?$lookup=*')
+      setLists(response.data)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    getList()
+  }, [])
+
   return (
     <ScrollView style={{backgroundColor: 'white'}}>
+
       
       <View style={style.container}>
 
@@ -31,6 +52,7 @@ const ListToDo = ({navigation}) => {
             style={style.input1}
             name="Search"
             placeholder="Search"
+            onChangeText={value => setSearchTerm(value)}
             />
           </View>
 
@@ -62,10 +84,21 @@ const ListToDo = ({navigation}) => {
           marginTop: 30
         }}>
 
-          <View style={BoxList.box}>
+        {
+          lists.filter(val => {
+            if (seacrhTerm == "") {
+              return val
+            } else if (val.name.toLowerCase().includes(seacrhTerm.toLocaleLowerCase())) {
+              return val
+            }
+          }).map(item => (
+          <View style={BoxList.box} key={item._id}>
             <View>
-              <Text style={{fontWeight: '800', fontSize: 12}} onPress={() => navigation.navigate("DetailList")}>
-                Study - Golang
+              <Text 
+              style={{fontWeight: '800', fontSize: 12}} 
+              onPress={() => navigation.navigate("DetailList", {item})
+              }>
+              {item.name}
               </Text>
               <Text style={{
                 fontWeight: '400', 
@@ -74,13 +107,18 @@ const ListToDo = ({navigation}) => {
                 marginTop: 3,
                 marginBottom: 10,
                 width: 235
-                }}>
-                Learn Golang to improve fundamentals and familiarize with coding.
+                }}
+                numberOfLines={4}
+                ellipsizeMode="tail"
+                >
+                {item.description}
               </Text>
-              <Text style={{fontWeight: '400', fontSize: 8, color: '#9B9B9B'}}>
+              <View style={{flexDirection: 'row'}}>
                 <Image style={{marginRight: 3}} source={require('../images/Calendar.png')} />
-                19 July 2022
+                <Text style={{fontWeight: '400', fontSize: 8, color: '#9B9B9B'}}>
+                  {item.choose}
                 </Text>
+              </View>
             </View>
 
             <View>
@@ -93,7 +131,7 @@ const ListToDo = ({navigation}) => {
                 color: 'white',
                 borderRadius: 5
                 }}>
-                Study
+                {item.category[0].name}
               </Text>
               <View style={{
                 display: 'flex',
@@ -107,8 +145,10 @@ const ListToDo = ({navigation}) => {
 
             </View>
           </View>
+          ))
+        }
 
-          <View style={BoxList.box2}>
+          {/* <View style={BoxList.box2}>
             <View>
               <Text style={{fontWeight: '800', fontSize: 12, textDecorationLine: 'line-through'}}>
                 Home Work - Mathematics
@@ -153,9 +193,7 @@ const ListToDo = ({navigation}) => {
             <View>
 
             </View>
-          </View>
-
-            <Text onPress={() => navigation.navigate("AddCategory")}>Next</Text>
+          </View> */}
         </View>
 
       </View>
